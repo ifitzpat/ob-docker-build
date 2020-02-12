@@ -90,7 +90,13 @@ This function is called by `org-babel-execute-src-block'"
 	)
 
     (message "executing docker-build source code block")
-    (org-babel-eval-docker-build (concat "docker build " dir " " tag " -f" ) body dir)
+    (if push
+	(progn
+	  (org-babel-eval-docker-build (concat "docker build " dir " " tag "-t " push " -f" ) body dir)
+	  (async-shell-command (concat "docker push " push))
+	  )
+	  (org-babel-eval-docker-build (concat "docker build " dir " " tag " -f" ) body dir)
+      )
     )
   ;; when forming a shell command, or a fragment of code in some
   ;; other language, please preprocess any file names involved with
