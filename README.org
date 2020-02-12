@@ -1,0 +1,9 @@
+* Ob-docker-build
+
+Org babel extension to build docker images based on org babel source
+blocks. Calling ~C-c C-c~ on dockerfile source blocks calls ~docker build~
+on that block.
+
+: #+begin_src docker-build :context nil :push nil :tag nil
+: FROM ubuntu:18.04
+: #+end_src

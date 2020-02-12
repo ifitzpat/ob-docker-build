@@ -1,4 +1,4 @@
-;;; ob-dockerfile.el --- org-babel functions for dockerfile evaluation
+;;; ob-docker-build.el --- org-babel functions for dockerfile evaluation
 
 ;; Copyright (C) Dr. Ian FitzPatrick
 
@@ -26,34 +26,34 @@
 
 ;;; Commentary:
 ;;
-;; call dockerfile apply on org babel block
+;; call docker build on org babel block
 ;;
 
 ;;; Requirements:
 
 
 ;;; Code:
-;(require 'ob)
+(require 'ob)
 ;(require 'ob-ref)
 ;(require 'ob-comint)
 ;(require 'ob-eval)
-;(require 's)
+(require 'dockerfile-mode)
 
 ;; possibly require modes required for your language
-(define-derived-mode dockerfile-mode dockerfile-mode "dockerfile"
+(define-derived-mode docker-build-mode dockerfile-mode "docker-build"
   "Major mode for building docker containers from org-babel."
   )
 
 
 ;; optionally declare default header arguments for this language
-(defvar org-babel-default-header-args:dockerfile '((:tag . nil)(:push . nil)))
+(defvar org-babel-default-header-args:docker-build '((:context . nil)(:tag . nil)(:push . nil)))
 
 ;; This function expands the body of a source code block by doing
 ;; things like prepending argument definitions to the body, it should
-;; be called by the `org-babel-execute:dockerfile' function below.
-(defun org-babel-expand-body:dockerfile (body params &optional processed-params)
+;; be called by the `org-babel-execute:docker-build' function below.
+(defun org-babel-expand-body:docker-build (body params &optional processed-params)
   "Expand BODY according to PARAMS, return the expanded body."
-  ;(require 'inf-dockerfile) : TODO check if needed
+  ;(require 'inf-docker-build) : TODO check if needed
   body ; TODO translate params to yaml variables
 )
 
@@ -76,15 +76,16 @@
 ;; "session" evaluation).  Also you are free to define any new header
 ;; arguments which you feel may be useful -- all header arguments
 ;; specified by the user will be available in the PARAMS variable.
-(defun org-babel-execute:dockerfile (body params)
-  "Execute a block of dockerfile code with org-babel.
+(defun org-babel-execute:docker-build (body params)
+  "Execute a block of docker-build code with org-babel.
 This function is called by `org-babel-execute-src-block'"
   (let* ((vars (org-babel--get-vars params))
-	 (action (if (assoc :action params) (cdr (assoc :action params)) "apply"))
+	 (tag (if (assoc :tag params) (cdr (assoc :tag params)) nil))
+	 (push (if (assoc :push params) (cdr (assoc :push params)) nil))
 	 (context (if (assoc :context params) (concat " --context='" (cdr (assoc :context params)) "' ") nil))
 	 )
-    (message "executing dockerfile source code block")
-    (org-babel-eval-dockerfile (concat "dockerfile " context action " -f" ) body)
+    (message "executing docker-build source code block")
+    (org-babel-eval-docker-build (concat "docker build " context tag " -f" ) body)
     )
   ;; when forming a shell command, or a fragment of code in some
   ;; other language, please preprocess any file names involved with
@@ -93,13 +94,13 @@ This function is called by `org-babel-execute-src-block'"
   )
 
 
-(defun org-babel-eval-dockerfile (cmd yaml)
+(defun org-babel-eval-docker-build (cmd yaml)
   "Run CMD on BODY.
 If CMD succeeds then return its results, otherwise display
 STDERR with `org-babel-eval-error-notify'."
   (let ((err-buff (get-buffer-create " *Org-Babel Error*"))
-	(yaml-file (org-babel-temp-file "ob-dockerfile-yaml-"))
-	(output-file (org-babel-temp-file "ob-dockerfile-out-"))
+	(yaml-file (org-babel-temp-file "ob-docker-build-yaml-"))
+	(output-file (org-babel-temp-file "ob-docker-build-out-"))
 	exit-code)
     (with-temp-file yaml-file (insert yaml))
     (with-current-buffer err-buff (erase-buffer))
@@ -122,5 +123,5 @@ STDERR with `org-babel-eval-error-notify'."
 	(with-current-buffer output-file (buffer-string)))))
 
 
-(provide 'ob-dockerfile)
-;;; ob-dockerfile.el ends here
+(provide 'ob-docker-build)
+;;; ob-docker-build.el ends here
