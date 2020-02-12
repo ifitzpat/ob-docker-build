@@ -82,10 +82,15 @@ This function is called by `org-babel-execute-src-block'"
   (let* ((vars (org-babel--get-vars params))
 	 (tag (if (assoc :tag params) (cdr (assoc :tag params)) nil))
 	 (push (if (assoc :push params) (cdr (assoc :push params)) nil))
-	 (context (if (assoc :context params) (concat " --context='" (cdr (assoc :context params)) "' ") nil))
+	 (dir (cdr-safe (assoc :dir params)))
 	 )
+
+    (if (not dir)
+	(error "A build context is required for Docker.  Please provide a :dir header arg")
+	)
+
     (message "executing docker-build source code block")
-    (org-babel-eval-docker-build (concat "docker build " context tag " -f" ) body)
+    (org-babel-eval-docker-build (concat "docker build " dir " " tag " -f" ) body dir)
     )
   ;; when forming a shell command, or a fragment of code in some
   ;; other language, please preprocess any file names involved with
@@ -94,18 +99,19 @@ This function is called by `org-babel-execute-src-block'"
   )
 
 
-(defun org-babel-eval-docker-build (cmd yaml)
+(defun org-babel-eval-docker-build (cmd body dir)
   "Run CMD on BODY.
 If CMD succeeds then return its results, otherwise display
 STDERR with `org-babel-eval-error-notify'."
   (let ((err-buff (get-buffer-create " *Org-Babel Error*"))
-	(yaml-file (org-babel-temp-file "ob-docker-build-yaml-"))
+	(docker-file (org-babel-temp-file "ob-docker-build-docker-"))
 	(output-file (org-babel-temp-file "ob-docker-build-out-"))
+	(org-babel-temporary-directory dir)
 	exit-code)
-    (with-temp-file yaml-file (insert yaml))
+    (with-temp-file docker-file (insert body))
     (with-current-buffer err-buff (erase-buffer))
     (setq exit-code
-	  (shell-command (concat cmd " " yaml-file) output-file err-buff)
+	  (shell-command (concat cmd " " docker-file) output-file err-buff)
 	  )
       (if (or (not (numberp exit-code)) (> exit-code 0))
 	  (progn
