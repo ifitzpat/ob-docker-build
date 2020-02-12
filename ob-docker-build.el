@@ -80,7 +80,7 @@
   "Execute a block of docker-build code with org-babel.
 This function is called by `org-babel-execute-src-block'"
   (let* ((vars (org-babel--get-vars params))
-	 (tag (if (assoc :tag params) (cdr (assoc :tag params)) nil))
+	 (tag (if (assoc :tag params) (concat "-t " (cdr (assoc :tag params))) nil))
 	 (push (if (assoc :push params) (cdr (assoc :push params)) nil))
 	 (dir (cdr-safe (assoc :dir params)))
 	 )
