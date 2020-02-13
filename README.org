@@ -9,7 +9,7 @@ blocks.
 
  - docker
 
-Please refer to [[https://kubernetes.io/docs/tasks/tools/install-kubectl/][this page]] for more information on installing ~docker~.
+Please refer to [[https://www.docker.com/products/docker-desktop][this page]] for more information on installing ~docker~.
 
 *** Installation
 
