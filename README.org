@@ -1,9 +1,71 @@
 * Ob-docker-build
 
 Org babel extension to build docker images based on org babel source
-blocks. Calling ~C-c C-c~ on dockerfile source blocks calls ~docker build~
-on that block.
+blocks.
+
+** Getting Started
+
+*** Prerequisites
+
+ - docker
+
+Please refer to [[https://kubernetes.io/docs/tasks/tools/install-kubectl/][this page]] for more information on installing ~docker~.
+
+*** Installation
+
+Recommended install via [[https://github.com/jwiegly/use-package][use-package]] and [[https://github.com/quelpa/quelpa][quelpa]].
+
+   #+begin_src emacs-lisp
+(use-package ob-docker-build
+  :ensure-system-package docker
+  :ensure t
+  :defer t
+  :quelpa ((ob-docker-build :fetcher github :repo "ifitzpat/ob-docker-build") :upgrade t)
+  :config
+  (add-to-list 'org-babel-load-languages '(docker-build . t))
+  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
+)
+   #+end_src
+
+
+** Usage
+
+Calling ~C-c C-c~ on dockerfile source blocks calls ~docker build~
+on that block. Use the ~:dir~ header argument to specify the build
+context (i.e., where your source files are). Optionally provide the ~:push~
+header argument to push your image to the specified registry following build.
 
 : #+begin_src docker-build :dir "/path/to/source" :push hub.docker.com/username/imagename:tagname :tag my-image:latest
 : FROM ubuntu:18.04
 : #+end_src
+
+
+** Roadmap
+
+*** TODO show build progress in a dedicated buffer rather than waiting for org-babel to finish
+
+** Contributing
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are extremely appreciated.
+
+ 1. Fork the Project
+ 2. Create your Feature Branch (git checkout -b feature/AmazingFeature)
+ 3. Commit your Changes (git commit -m 'Add some AmazingFeature')
+ 4. Push to the Branch (git push origin feature/AmazingFeature)
+ 5. Open a Pull Request
+
+
+** License
+
+Distributed under the GPLv3. See LICENSE for more information.
+
+** Contact
+
+Dr. Ian FitzPatrick - @ifitzpat - ian@ianfitzpatrick.eu
+
+Project Link: https://github.com/fitzpat/ob-docker-build
+
+** Acknowledgements
+
+
+ - [[https://github.com/roshanlam/ReadMeTemplate][README template]]
