@@ -42,7 +42,7 @@ header argument to push your image to the specified registry following build.
 
 ** Roadmap
 
-*** TODO show build progress in a dedicated buffer rather than waiting for org-babel to finish
+****** TODO show build progress in a dedicated buffer rather than waiting for org-babel to finish
 
 ** Contributing
 
