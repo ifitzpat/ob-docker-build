@@ -117,7 +117,7 @@ STDERR with `org-babel-eval-error-notify'."
     (with-temp-file docker-file (insert body))
     (with-current-buffer err-buff (erase-buffer))
     (setq exit-code
-	  (shell-command (concat cmd " " docker-file) output-file err-buff)
+	  (async-shell-command (concat cmd " " docker-file) output-file err-buff)
 	  )
       (if (or (not (numberp exit-code)) (> exit-code 0))
 	  (progn
