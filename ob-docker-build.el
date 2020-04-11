@@ -97,6 +97,7 @@ This function is called by `org-babel-execute-src-block'"
     (if push
 	(progn
 	  (org-babel-eval-docker-build (concat "docker build " dir tag-param push-param " -f" ) body dir)
+	  (sleep-for 3)
 	  (async-shell-command (concat "docker push " push) "*docker-push*")
 	  )
 	  (org-babel-eval-docker-build (concat "docker build " dir tag-param " -f" ) body dir)
