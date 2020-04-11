@@ -13,6 +13,9 @@ FROM alpine:latest
 
 * Build, Tag, and Push
 
- #+begin_src docker-build :dir . :tag testimage:latest :push hub.docker.com/ifitzpat/testimage:latest
+ #+begin_src docker-build :dir . :tag testimage:latest :push ifitzpat/testimage:latest
 FROM alpine:latest
 #+end_src
+
+#+RESULTS:
+: docker push ifitzpat/testimage:latest
