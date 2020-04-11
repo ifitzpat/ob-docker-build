@@ -121,23 +121,24 @@ STDERR with `org-babel-eval-error-notify'."
 	exit-code)
     (with-temp-file docker-file (insert body))
     (with-current-buffer err-buff (erase-buffer))
-    (setq exit-code
+    ;; (setq exit-code
 	  (async-shell-command (concat cmd " " docker-file) output-file err-buff)
-	  )
-      (if (or (not (numberp exit-code)) (> exit-code 0))
-	  (progn
-	    (with-current-buffer err-buff
-	      (org-babel-eval-error-notify exit-code (buffer-string)))
-	    (save-excursion
-	      (when (get-buffer org-babel-error-buffer-name)
-		(with-current-buffer org-babel-error-buffer-name
-		  (unless (derived-mode-p 'compilation-mode)
-		    (compilation-mode))
-		  ;; Compilation-mode enforces read-only, but Babel expects the buffer modifiable.
-		  (setq buffer-read-only nil))))
-	    nil)
-	; return the contents of output file
-	(with-current-buffer output-file (buffer-string)))))
+	  ;; )
+      ;; (if (or (not (numberp exit-code)) (> exit-code 0))
+      ;; 	  (progn
+      ;; 	    (with-current-buffer err-buff
+      ;; 	      (org-babel-eval-error-notify exit-code (buffer-string)))
+      ;; 	    (save-excursion
+      ;; 	      (when (get-buffer org-babel-error-buffer-name)
+      ;; 		(with-current-buffer org-babel-error-buffer-name
+      ;; 		  (unless (derived-mode-p 'compilation-mode)
+      ;; 		    (compilation-mode))
+      ;; 		  ;; Compilation-mode enforces read-only, but Babel expects the buffer modifiable.
+      ;; 		  (setq buffer-read-only nil))))
+      ;; 	    nil)
+      ;; 	; return the contents of output file
+      ;; 	(with-current-buffer output-file (buffer-string)))
+      ))
 
 
 (provide 'ob-docker-build)
