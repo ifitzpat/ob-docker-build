@@ -44,6 +44,8 @@ header argument to push your image to the specified registry following build.
 
 ****** TODO show build progress in a dedicated buffer rather than waiting for org-babel to finish
 
+****** TODO generate a placeholder as results and then update once docker process has finished (like ob-async)
+
 ** Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are extremely appreciated.
