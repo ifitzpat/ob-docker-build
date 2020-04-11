@@ -80,10 +80,14 @@
   "Execute a block of docker-build code with org-babel.
 This function is called by `org-babel-execute-src-block'"
   (let* ((vars (org-babel--get-vars params))
-	 (tag (if (assoc :tag params) (concat "-t " (cdr (assoc :tag params))) nil))
+	 (tag (if (assoc :tag params) (cdr (assoc :tag params)) nil))
 	 (push (if (assoc :push params) (cdr (assoc :push params)) nil))
 	 (dir (cdr-safe (assoc :dir params)))
+	 (tag-param (if tag (concat " -t " tag) ""))
+	 (push-param (if push (concat " -t " push) ""))
 	 )
+
+    (message tag)
 
     (if (not dir)
 	(error "A build context is required for Docker.  Please provide a :dir header arg")
@@ -92,10 +96,10 @@ This function is called by `org-babel-execute-src-block'"
     (message "executing docker-build source code block")
     (if push
 	(progn
-	  (org-babel-eval-docker-build (concat "docker build " dir " " tag "-t " push " -f" ) body dir)
-	  (async-shell-command (concat "docker push " push))
+	  (org-babel-eval-docker-build (concat "docker build " dir tag-param push-param " -f" ) body dir)
+	  (async-shell-command (concat "docker push " push) "*docker-push*")
 	  )
-	  (org-babel-eval-docker-build (concat "docker build " dir " " tag " -f" ) body dir)
+	  (org-babel-eval-docker-build (concat "docker build " dir tag-param " -f" ) body dir)
       )
     )
   ;; when forming a shell command, or a fragment of code in some
