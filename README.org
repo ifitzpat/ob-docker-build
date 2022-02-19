@@ -13,7 +13,7 @@ Please refer to [[https://www.docker.com/products/docker-desktop][this page]] fo
 
 *** Installation
 
-Recommended install via [[https://github.com/jwiegly/use-package][use-package]] and [[https://github.com/quelpa/quelpa][quelpa]].
+Recommended install via [[https://github.com/jwiegley/use-package][use-package]] and [[https://github.com/quelpa/quelpa][quelpa]].
 
    #+begin_src emacs-lisp
 (use-package ob-docker-build
